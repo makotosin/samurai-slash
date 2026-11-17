@@ -458,6 +458,102 @@ html,body{width:100%;height:100%;overflow:hidden!important;overscroll-behavior:n
 @media (max-width:850px), (max-height:510px) {
   #hud #bar {top:calc(100% + 5px) !important; width:42% !important; height:9px !important;}
 }
+
+/* v5.9b: Audio switches live in the upper center, away from SLASH and the
+   life/progress HUD. Layout-only change; audio callbacks are untouched. */
+#audioDock {
+  position:absolute !important;
+  top:11% !important;
+  bottom:auto !important;
+  right:auto !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  z-index:85 !important;
+  display:flex !important;
+  justify-content:center;
+  align-items:center;
+  gap:6px;
+  white-space:nowrap;
+}
+#audioDock button {
+  min-height:30px;
+  padding:6px 10px;
+  font-size:clamp(10px,1.1vw,13px);
+}
+@media (max-width:850px), (max-height:510px) {
+  #audioDock {top:11.5% !important; gap:5px;}
+  #audioDock button {min-height:26px; padding:5px 7px; font-size:11px;}
+}
+
+/* v5.10: Adaptive PC landscape / phone portrait HUD.
+   The 960x540 gameplay canvas remains 16:9 (no cropping or geometric stretching).
+   The HUD independently uses the available portrait viewport. */
+@media (orientation:landscape) and (pointer:fine) {
+  #stage { width:min(100vw,177.7778dvh)!important; height:min(100dvh,56.25vw)!important; }
+  #hud {top:2%!important;left:2%!important;right:2%!important;align-items:center;}
+  #hud .plate {font-size:clamp(12px,1.3vw,19px)!important;padding:7px 15px!important;}
+  #hud #bar {width:min(39%,480px)!important;height:14px!important;top:calc(100% + 8px)!important;right:0!important;transform:none!important;}
+  #audioDock {top:11%!important;}
+  #audioDock button {font-size:clamp(12px,1vw,15px)!important;min-height:34px!important;}
+}
+/* Layout for portrait browser windows, including narrow Windows PC windows and iPhones.
+   Reserve a wide gameplay viewport in the middle. Place readable controls on the
+   top and bottom shelves, separate from the playfield. */
+@media (orientation:portrait) {
+  #shell {display:flex!important;align-items:stretch!important;justify-content:center!important;}
+  #stage {width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;
+    background:radial-gradient(ellipse at 50% 50%,#6c4b46 0%,#33232e 71%,#1c1624 100%)!important;
+    position:relative!important;border:none!important;box-shadow:none!important;}
+  #scene {position:absolute!important;left:0!important;top:27%!important;width:100%!important;
+    height:auto!important;aspect-ratio:16 / 9!important;object-fit:contain!important;
+    border-block:2px solid #b68d58;box-shadow:0 10px 25px #0008;}
+  #hud {left:4%!important;right:4%!important;top:max(2%,env(safe-area-inset-top))!important;
+    display:flex!important;justify-content:space-between!important;align-items:flex-start!important;
+    gap:8px!important;z-index:35!important;}
+  #logo {font-size:clamp(16px,4.3vw,29px)!important;line-height:.92!important;flex-shrink:0;}
+  #hud .plate {max-width:73%;white-space:normal!important;text-align:right!important;
+    font-size:clamp(13px,3.2vw,19px)!important;line-height:1.3!important;
+    padding:9px 12px!important;border-radius:13px!important;}
+  #life {font-size:clamp(17px,4.2vw,24px)!important;letter-spacing:1px!important;white-space:nowrap;}
+  /* 90-degree turn makes the existing JS width-based progress fill flow bottom to top. */
+  #hud #bar {width:clamp(170px,34dvh,410px)!important;height:18px!important;
+    top:clamp(220px,34dvh,430px)!important;right:-1%!important;left:auto!important;
+    transform:rotate(-90deg)!important;transform-origin:right center!important;
+    border-width:3px!important;border-radius:10px!important;z-index:1!important;}
+  #audioDock {top:clamp(78px,12dvh,125px)!important;left:50%!important;right:auto!important;
+    transform:translateX(-50%)!important;z-index:60!important;gap:9px!important;}
+  #audioDock button {font-size:clamp(12px,3vw,15px)!important;min-height:39px!important;
+    padding:8px 12px!important;}
+  #modeText {left:5%!important;bottom:15%!important;right:12%!important;
+    font-size:clamp(15px,3.4vw,23px)!important;line-height:1.25!important;}
+  #action,#reposition {right:5%!important;bottom:5%!important;min-height:49px!important;
+    font-size:clamp(17px,4vw,24px)!important;z-index:56!important;}
+  #aimCard {top:19%!important;right:5%!important;min-width:160px!important;
+    font-size:clamp(13px,3vw,18px)!important;}
+  #aimMap {top:15%!important;left:4%!important;width:clamp(108px,27vw,150px)!important;
+    height:clamp(104px,25vw,135px)!important;}
+  #aimControls {left:5%!important;bottom:5%!important;z-index:56!important;}
+  #aimControls .finePad {grid-template-columns:repeat(3,clamp(38px,11vw,50px))!important;
+    grid-template-rows:repeat(3,clamp(35px,9vw,45px))!important;}
+  #aimControls button {width:100%!important;height:100%!important;min-width:37px!important;
+    min-height:36px!important;font-size:22px!important;}
+  #meter {left:5%!important;right:5%!important;bottom:14%!important;z-index:55!important;
+    padding:12px 14px 15px!important;}
+  #meterHead {font-size:clamp(20px,5vw,30px)!important;}
+  #meterTrack {height:clamp(29px,6.2vw,40px)!important;}
+  #meterSub {font-size:clamp(12px,3.2vw,17px)!important;}
+  #veil>div {right:5%!important;bottom:12%!important;width:50%!important;max-width:340px!important;}
+  #veil #play {min-height:55px!important;font-size:clamp(16px,4vw,25px)!important;}
+  /* Combat remains the familiar full-layer composition; only HUD relocates. */
+}
+/* Short portrait viewport: move scene upward to preserve a substantial control shelf. */
+@media (orientation:portrait) and (max-height:680px) {
+  #scene {top:26%!important;}
+  #audioDock {top:14%!important;}
+  #hud #bar {top:30dvh!important;width:35dvh!important;}
+  #meter {bottom:11%!important;}
+}
+
 </style></head><body><div id="shell"><main id="stage"><canvas id="scene" width="960" height="540"></canvas><div id="hud"><div id="logo">SAMURAI<br>SLASH</div><div id="bar"><div id="barFill"></div></div><div class="plate"><span id="life">♥ ♥ ♥ ♥ ♥</span> &nbsp; <span id="room">Chamber I</span></div></div><div id="modeText"></div><div id="realmIntro" aria-hidden="true"></div><div id="aimCard"><strong id="aimStatus">DISTANCE</strong><div class="aimLine"><span>L/R</span><b id="aimX">0 cm</b></div><div class="aimLine"><span>F/B</span><b id="aimZ">0 cm</b></div><div id="accuracyPanel"><div class="accHeader"><span>POSITION / DISTANCE ACCURACY</span><b id="aimPercent">0%</b></div><div id="aimAccuracyTrack"><div id="aimAccuracyFill"></div></div><div id="aimQuality">ADJUSTING</div></div></div><div id="aimMap" aria-hidden="true"><div class="mapTitle">DISTANCE</div><div class="mapField"></div><div class="mapCrossH"></div><div class="mapCrossV"></div><div class="mapTarget"></div><div class="mapHero" id="mapHero"></div><div class="mapLegend"><span><i style="background:#7cff98"></i>TARGET</span><span><i style="background:#ffe5a4"></i>YOU</span></div></div><div id="aimControls"><div class="finePad"><span></span><button type="button" data-aim="forward" aria-label="Move forward">↑</button><span></span><button type="button" data-aim="left" aria-label="Move left">←</button><span style="color:#f0c77d;font-size:11px">●</span><button type="button" data-aim="right" aria-label="Move right">→</button><span></span><button type="button" data-aim="back" aria-label="Move backward">↓</button><span></span></div></div><button id="reposition" type="button">↶ Adjust Position Again</button><button id="action">READY</button><div id="meter"><div id="meterHead">POWER</div><div id="meterTrack"><div class="zone" id="zone"></div><div id="meterFill"></div><div id="meterNeedle"></div></div><div id="meterSub"><span id="meterDetail">Power Strength</span><b id="meterValue">0%</b></div></div><section id="dramatic"><div id="slashRoom"></div><div id="slashPhase"></div><img id="slashActor" src="slash_ready.png" alt=""><div id="slashStage"><img id="slashTargetSprite" src="makiwara_intact.png" alt="Target"></div><div id="cinematicFlash"></div><div id="cinematicShine"></div><div id="cinematicDebris" aria-hidden="true"></div><div id="cutStateBanner" aria-hidden="true"></div><div id="targetDamageText" aria-live="polite">Straw Roll  /  Uncut</div><div id="strawBits" aria-hidden="true"></div><div id="cutStreak"></div><div id="inkFrame"></div><div id="slashFlash"></div><div id="slashGrade">PERFECT!</div><div id="perfectStamp">S RANK</div></section><section id="results"><div class="result-layout"><div class="panel"><div id="resultRank">SLASH RATING</div><h2 id="resTitle">GREAT</h2><p id="resultLead">Distance, Power & Timing</p><div id="stats"><label>DISTANCE<b id="statD">0</b></label><label>POWER<b id="statP">0</b></label><label>TIMING<b id="statT">0</b></label></div><div id="resultScoreTrack"><div id="resultScoreFill"></div></div><div style="margin:0 0 11px;font-size:clamp(12px,1.5vw,17px);color:#f9da95">CUT SCORE：<b id="statC">0 cm</b></div><button id="next">Next Chamber</button></div><div class="result-target"><img id="resultTargetImage" src="makiwara_intact.png" alt="Cut target"><div id="resultTargetLabel">Straw Roll  /  Uncut</div></div></div></section><section id="runSummary" aria-label="Twelve-round results"><h2>TWELVE ROUNDS CLEARED!</h2><div class="sum-head"><span>TOTAL CUT SCORE <b id="sumScore">0.0</b></span><span>Split <b id="sumBisections">0 / 36</b></span><span>HP LEFT <b id="sumHealth">5 / 5</b></span><span>PLAY TIME <b id="sumElapsed">0m00s</b></span></div><div id="sumCards" class="sum-cards"></div><section id="finalRecord" data-outcome="" aria-live="polite"><h3 id="finalRecordTitle">FINAL BATTLE</h3><img id="finalRecordPortrait" src="lucifer_appearance.png" alt="LUCIFER"><p id="finalRecordReason"></p><div class="lastStats"><span id="finalRecordHits">HITS 0 / 3</span><span id="finalRecordHP">HP LEFT 0</span><span id="finalRecordScore">MAIN CUT SCORE 0 cm</span></div></section><div id="bossGate" aria-live="polite"><strong>SECRET FINAL BATTLE</strong><p id="bossGateDetail"></p><button type="button" id="bossEnter">Take the Masamune Blade</button></div><button type="button" id="restartRun">Start New Run</button><div class="sum-note">Distance, Power and Timing determine cut quality</div></section><section id="veil" style="display:grid"><div><h1>SAMURAI<br>SLASH</h1><button id="play">START GAME</button><small>v5.8 — 90s CHAMBERS · AUDIO · MOBILE UI<br>Music starts when you press START GAME</small></div></section><section id="bossBattle" data-phase="arrival" aria-label="Secret final battle: Lucifer">
  <div id="bossBanner">SPECIAL FINAL BATTLE — LUCIFER</div>
  <div id="bossHealth"><span id="bossPlayerHP">HP ♥♥♥♥♥</span><span id="bossProgress">Lucifer 0 / 3</span></div>
